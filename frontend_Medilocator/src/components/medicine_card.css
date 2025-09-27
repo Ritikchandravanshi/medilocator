@@ -1,0 +1,68 @@
+   
+.single-card{
+  background-color: white;
+}
+    .product-card {
+      border-radius: 20px;
+      border: 1px solid #eee;
+      padding: 15px;
+      max-width: 300px;
+    }
+
+    .product-img {
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .product-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 12px;
+    }
+
+    .product-brand {
+      color: #888;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .price {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #000;
+    }
+    .discount {
+      color: #d63384;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .mrp {
+      color: #888;
+      text-decoration: line-through;
+      font-size: 0.9rem;
+    }
+
+    .delivery {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 5px;
+    }
+
+    .volume {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .add-btn {
+      background-color: #00c2a8;
+      color: white;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+
+ .add-btn:hover {
+      background-color: #00b29a;
+    }

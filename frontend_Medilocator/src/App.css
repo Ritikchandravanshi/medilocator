@@ -1,0 +1,32 @@
+body {
+  background-color: #f4fbfb !important;
+  color: #333 !important;
+}
+
+.detail{
+  margin: 1rem 1.5rem 1rem 1.5rem ;
+
+}
+.main-container{
+  background-color:#1b4242;
+}
+
+
+
+
+/* Footer */
+.footer {
+  background-color: #eef4ff;
+  color:#4f585e;
+    position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer .nav-link {
+  color: #4f585e !important;
+}
+
+.footer .nav-link:hover {
+  color: #00ffd5 !important;
+}
