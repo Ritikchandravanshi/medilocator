@@ -24,7 +24,7 @@ export default function Signup() {
 
   try {
     const res = await axios.post(
-      "http://localhost:8000/api/v1/users/register", // backend API URL
+      "/api/v1/users/register", // backend API URL
       formData,
       { withCredentials: true } // cookies/credentials ke liye
     );

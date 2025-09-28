@@ -1,29 +1,24 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
 
-dotenv.config();
+const app = express()
 
-const app = express();
-
-// ✅ CORS Setup
 app.use(cors({
-    origin: true, // Example: "http://localhost:5179" //ye abhi k liye h baad m production k liye safe nahi change kkar llena ritik bhai yaad se 
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}))
 
-app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ limit: "16kb" }));
+app.use(express.json({limit: "16kb"}));
+app.use(express.urlencoded({limit: "16kb"}))
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// Routes import
+//routes import
 import userRouter from './routes/user.routes.js';
 
-// Routes declaration
-app.use("/api/v1/users", userRouter); // Example: http://localhost:8000/api/v1/users/register
+//routes declaration
+app.use("/api/v1/users", userRouter)   //when it click on /users it transfer control to the userRouter which is in user.routes.js
+// http://localhost:800/api/v1/users/register
 
-export { app };
+export {app};
