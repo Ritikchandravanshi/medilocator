@@ -21,12 +21,11 @@ const generateAccessAndRefreshTokens = async(userId) => {
    }
 }
 
-
 const registerUser = asyncHandler(async(req, res) => {
    
     //get the user details 
      const{fullName, email, contactNo, gender, password} = req.body;  //from data will get in req.body
-     console.log(email);
+     //console.log(email);
 
      //check the validations
      if(!fullName || !email || !contactNo || !gender || !password){
@@ -116,4 +115,4 @@ const loginUser = asyncHandler(async(req, res) => {
    )
 })
 
-export {registerUser , loginUser};
+export {registerUser , loginUser , generateAccessAndRefreshTokens};

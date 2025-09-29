@@ -8,6 +8,9 @@ dotenv.config({
 // console.log("🔑 MONGO_URI:", process.env.MONGOdb_URI);
 
 
+console.log(process.env.MONGODB_URI);
+
+
 connectDB()
 .then(() => {
     app.listen(process.env.PORT || 5000, () => {
