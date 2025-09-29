@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -18,10 +19,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "/api/v1/users/login",
-        formData
-      );
+      const res = await axios.post("/api/v1/users/login", formData);
 
       console.log("Login success:", res.data);
 
@@ -35,7 +33,7 @@ export default function Login() {
 
       // Redirect or update UI after login
       setTimeout(() => {
-        window.location.href = "/"; 
+        window.location.href = "/";
       }, 1000);
     } catch (err) {
       console.error(err);
@@ -48,9 +46,10 @@ export default function Login() {
       setSuccess("");
     }
   };
-
+ const  navigate = useNavigate();
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+   
+    <div style={{fontSize : "9px"}} className="d-flex justify-content-center align-items-center vh-100">
       <div className="card p-4 shadow" style={{ width: "300px" }}>
         <h3 className="text-center mb-3">Login</h3>
 
@@ -85,8 +84,22 @@ export default function Login() {
           <button type="submit" className="btn btn-primary w-100">
             Login
           </button>
+          <h3 style={{ fontSize: "10px" }}>
+            Not signup please ?{" "}
+            <span
+              style={{
+                color: "#0d6efd",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/Signup")}
+            >
+              signup now
+            </span>
+          </h3>
         </form>
       </div>
+      
     </div>
   );
 }

@@ -5,6 +5,8 @@ import Detail from "./components/Detail";
 import Signup from "./components/Signup";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/login";
+import MedicineDetails from "./components/medicineDetails";
+import Admin from "./components/admin";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="/" element={<Detail />} />
             <Route path="/signup" element={<Signup />} />
              <Route path="/login" element={<Login/>} />
+              <Route path="/admin" element={<Admin/>} />
+             <Route path="/medicineDetails" element={<MedicineDetails/>} />
           </Routes>
         </div>
         <div className="footer">

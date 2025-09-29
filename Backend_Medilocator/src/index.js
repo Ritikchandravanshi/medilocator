@@ -3,8 +3,10 @@ import { app } from "./app.js";
 import connectDB from "./db/index.js";
 
 dotenv.config({
-    path: './src/.env'
+ path: './src/.env'
 });
+// console.log("🔑 MONGO_URI:", process.env.MONGOdb_URI);
+
 
 connectDB()
 .then(() => {

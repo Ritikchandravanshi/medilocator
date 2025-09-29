@@ -63,6 +63,15 @@ function Navbar() {
               onClick={() => navigate("/signup")}
             >
               Signup
+
+            </button>
+
+              <button style={{marginLeft : "8px"}}
+              type="button"
+              className="btn btn-teal btn-sm"
+              onClick={() => navigate("/admin")}
+            >
+              Admin
             </button>
           </div>
         </div>
