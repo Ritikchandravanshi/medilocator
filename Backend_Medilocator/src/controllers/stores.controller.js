@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
-import { Store } from "../modles/store.models.js";
+import { Store } from "../models/store.models.js";
 
 const generateAccessAndRefreshTokens = async(storeId) => {
    try {

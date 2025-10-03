@@ -24,6 +24,11 @@ const storeSchema = new Schema(
             maxlength: 10,
             minlength: 10
         },
+        licenseNumber: {
+            type: String,
+            required: true,
+            unique: true,
+        },
         password:{
             type: String,
             required: [true, "Password is required"]

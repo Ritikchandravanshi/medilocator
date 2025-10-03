@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
-import { User } from "../modles/users.models.js";
+import { User } from "../models/users.models.js";
 
 //Access token and refresh tokens are used at different places neef to generate so we created a method that can be reused
 

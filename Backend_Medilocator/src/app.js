@@ -16,11 +16,13 @@ app.use(cookieParser());
 
 //routes import
 import userRouter from './routes/user.routes.js';
-import storeRouter from './routes/store.routes.js'
+import storeRouter from './routes/store.routes.js';
+import productRouter from './routes/products.routes.js';
 
 //routes declaration
 app.use("/api/v1/users", userRouter)   //when it click on /users it transfer control to the userRouter which is in user.routes.js
 // http://localhost:800/api/v1/users/register
 app.use("/api/v1/stores", storeRouter)
+app.use("/api/v1/products" ,productRouter)
 
 export {app};
