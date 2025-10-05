@@ -24,17 +24,17 @@ function Navbar() {
 
             <ul className="nav mb-2 mb-lg-0">
               <li>
-                <a href="#" className="px-2  nav-color nav-link">
+                <a href="/" className="px-2  nav-color nav-link">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="nav-link nav-color px-2">
+                <a href="/" className="nav-link nav-color px-2">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#" className="nav-link nav-color px-2 ">
+                <a href="/" className="nav-link nav-color px-2 ">
                   Support 24/7
                 </a>
               </li>

@@ -1,8 +1,13 @@
-
 import React from "react";
-import { FaWarehouse, FaSearch, FaPlusCircle, FaSignOutAlt } from "react-icons/fa";
-import {Link ,  useNavigate } from "react-router-dom";
-import "./StoreSidebar.css"
+import {
+  FaWarehouse,
+  FaSearch,
+  FaPlusCircle,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+import "./StoreSidebar.css";
 
 const StoreSidebar = () => {
   const navigate = useNavigate();
@@ -10,11 +15,7 @@ const StoreSidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo" onClick={() => navigate("/store")}>
-        <img
-          src="/logo192.png"
-          alt="MediLocator Logo"
-          className="sidebar-logo-img"
-        />
+        <img className="sidebar-logo-img" src={logo} alt="medilocator" />
         <h2>MediLocator</h2>
       </div>
 
@@ -25,14 +26,11 @@ const StoreSidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/store/search" className="sidebar-link">
-            <FaSearch className="icon" /> Search from Catalog
-          </Link>
-        </li>
-        <li>
-          <Link to="/store/add" className="sidebar-link">
-            <FaPlusCircle className="icon" /> Add Medicine
-          </Link>
+          <li>
+            <Link to="/store/search" className="sidebar-link">
+              🔍 Search from Catalog
+            </Link>
+          </li>
         </li>
         <li className="logout" onClick={() => navigate("/")}>
           <FaSignOutAlt className="icon" /> Logout

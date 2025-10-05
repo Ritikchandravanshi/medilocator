@@ -4,9 +4,9 @@ import "./medicineDetails.css"
 
 function MedicineDetails() {
 const images = [
-  "https://images.unsplash.com/photo-1588776814546-4cfe9e51c6a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80", // tablets
-  "https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80", // pill bottle
-  "https://images.unsplash.com/photo-1611078489935-0cb964de46d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80"  // medicine strips
+"https://media.istockphoto.com/id/1022216070/photo/packet-of-generic-paracetamol-tablets.jpg?s=2048x2048&w=is&k=20&c=wG39Ddaqn2C_hgh7VjQ-_XpqpquEy-oitQpv0EGhfBY=",
+  "https://media.istockphoto.com/id/157402355/photo/generic-paracetamol-isolated-on-white.jpg?s=1024x1024&w=is&k=20&c=hJmEMYYvJ8s4gTkdTewITUaRQg63Al6tJRDWHBizW6Y=",
+  "https://media.istockphoto.com/id/1217213618/photo/generic-paracetamol-500mg-tablets.jpg?s=1024x1024&w=is&k=20&c=VrfcQ0v51-DOeM4iQpgzGizdAHLYVaFVoG8NxIdX5_A="
 ];
 
 

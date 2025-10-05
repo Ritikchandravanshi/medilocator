@@ -26,9 +26,6 @@ const AdminSidebar = () => {
         <li onClick={()=>navigate("/store")}>
           <FaStore className="icon" /> Store Management
         </li>
-        <li>
-          <FaPlusCircle className="icon" /> Add Product
-        </li>
         <li className="logout" onClick={()=>navigate("/")}>
           <FaSignOutAlt className="icon" /> Logout
         </li>

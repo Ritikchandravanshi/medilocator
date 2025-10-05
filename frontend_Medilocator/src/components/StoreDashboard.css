@@ -1,4 +1,4 @@
-/* src/pages/StoreDashboard.css */
+
 .store-container {
   display: flex;
   min-height: 100vh;
@@ -66,6 +66,7 @@
 .update-btn {
   background-color: #10b981;
   color: white;
+  margin-bottom: 4px;
 }
 
 .update-btn:hover {
