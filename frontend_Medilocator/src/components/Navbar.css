@@ -26,11 +26,14 @@ background-color: #fff;
 
 /* Search input */
 .search-input {
-  max-width: 200px;
+  max-width: 300px;
   border: 1px solid #00797a;
   border-radius: 6px;
 }
 
+.form-control {
+    font-size : 14px ; 
+}
 .search-input:focus {
   border-color: #2563EB; /* blue accent on focus */
   box-shadow: 0 0 4px rgba(37, 99, 235, 0.4);

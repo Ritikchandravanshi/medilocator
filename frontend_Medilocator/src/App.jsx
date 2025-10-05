@@ -6,7 +6,10 @@ import Signup from "./components/Signup";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/login";
 import MedicineDetails from "./components/medicineDetails";
-import Admin from "./components/admin";
+import AdminDashboard from "./components/AdminDashboard";
+import ProductCatalog from "./components/ProductCatalog";
+import StoreDashboard from "./components/StoreDashboard";
+
 
 function App() {
   return (
@@ -18,8 +21,10 @@ function App() {
             <Route path="/" element={<Detail />} />
             <Route path="/signup" element={<Signup />} />
              <Route path="/login" element={<Login/>} />
-              <Route path="/admin" element={<Admin/>} />
              <Route path="/medicineDetails" element={<MedicineDetails/>} />
+            <Route path="/admin" element={<AdminDashboard/>} />
+            <Route path="/admin/catalog" element={<ProductCatalog />} />
+            <Route path="/store" element={<StoreDashboard/>}/>
           </Routes>
         </div>
         <div className="footer">
