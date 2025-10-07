@@ -23,20 +23,20 @@ function App() {
           element={<Layout />}
         >
           <Route path="/" element={<Detail />} />
-           <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminSignup />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-             <Route path="/medicineDetails" element={<MedicineDetails />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<AdminSignup />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/medicineDetails" element={<MedicineDetails />} />
         </Route>
 
         {/* Routes without Navbar + Footer */}
-   
-          <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route path="/admin/catalog" element={<ProductCatalog />} />
-          <Route path="/store" element={<StoreDashboard />} />
-          <Route path="/store/search" element={<SearchCatalog />} />
-          <Route path="/search/add" element={<AddProductCatalog />} />
+
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/admin/catalog" element={<ProductCatalog />} />
+        <Route path="/store" element={<StoreDashboard />} />
+        <Route path="/store/search" element={<SearchCatalog />} />
+        <Route path="/search/add" element={<AddProductCatalog />} />
       </Routes>
     </Router>
   );

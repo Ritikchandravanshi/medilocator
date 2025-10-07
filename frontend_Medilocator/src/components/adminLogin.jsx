@@ -7,9 +7,10 @@ export default function AdminLogin() {
     email: "",
     password: "",
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,45 +18,32 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      const res = await axios.post("/api/v1/users/login", formData);
-
-      console.log("Login success:", res.data);
-
-      // Store tokens in localStorage
+      const res = await axios.post("/api/v1/stores/login", formData); // Admin login API
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("store", JSON.stringify(res.data.store));
 
       setSuccess("Login successful!");
       setError("");
 
-      // Redirect or update UI after login
       setTimeout(() => {
-        window.location.href = "/adminDashboard";
+        navigate("/adminDashboard"); // Redirect to admin dashboard
       }, 1000);
     } catch (err) {
-      console.error(err);
-
-      setError(
-        err.response && err.response.data
-          ? err.response.data.message
-          : "Invalid email or password"
-      );
+      setError(err.response?.data?.message || "Invalid email or password");
       setSuccess("");
     }
+    setLoading(false);
   };
- const  navigate = useNavigate();
+
   return (
-   
-    <div style={{fontSize : "9px"}} className="d-flex justify-content-center align-items-center vh-100">
+    <div className="d-flex justify-content-center align-items-center vh-100">
       <div className="card p-4 shadow" style={{ width: "300px" }}>
         <h3 className="text-center mb-3">Admin Login</h3>
-
         {error && <div className="alert alert-danger">{error}</div>}
         {success && <div className="alert alert-success">{success}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="mb-2">
             <label className="form-label">Email</label>
@@ -68,7 +56,6 @@ export default function AdminLogin() {
               required
             />
           </div>
-
           <div className="mb-2">
             <label className="form-label">Password</label>
             <input
@@ -80,26 +67,28 @@ export default function AdminLogin() {
               required
             />
           </div>
-
-          <button type="submit" className="btn btn-primary w-100">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
-          <h3 style={{ fontSize: "10px" }}>
-            Not signup please ?{" "}
+          <h6 style={{ fontSize: "10px" }} className="mt-2">
+            Not registered yet?{" "}
             <span
               style={{
                 color: "#0d6efd",
                 cursor: "pointer",
                 textDecoration: "underline",
               }}
-              onClick={() => navigate("/adminDashboard")}
+              onClick={() => navigate("/admin")}
             >
-              signup now
+              Signup now
             </span>
-          </h3>
+          </h6>
         </form>
       </div>
-      
     </div>
   );
 }

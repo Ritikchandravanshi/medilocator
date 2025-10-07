@@ -1,151 +1,118 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function AdminSignup() {
+function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: "",
+    storeName: "",
+    address: "",
     email: "",
     contactNo: "",
-    gender: "",
+    licenseNumber: "",
     password: "",
   });
-
-  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await axios.post(
-        "/api/v1/users/register",
-        formData,
-        { withCredentials: true }
-      );
-      alert(res.data.message || "Signup successful!");
-      navigate("/admin/login");
-    } catch (error) {
-      console.error(error);
-      alert(error.response?.data?.message || "Signup failed");
+      const res = await axios.post("/api/v1/stores/add", formData);
+      setMessage(res.data.message || "Store registered successfully!");
+      setTimeout(() => navigate("/admin/login"), 2000);
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Error signing up");
     }
   };
 
   return (
-    <section className="signup-section">
-      <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
-        <div className="card shadow signup-card">
-          <div className="card-body p-4 position-relative">
-            {/* Close button */}
-            <button
-              type="button"
-              className="btn-close position-absolute top-0 end-0 m-2"
-              aria-label="Close"
-              onClick={() => navigate("/admin")}
-            ></button>
-
-            <h2 className="text-center mb-3"> Admin Sign Up</h2>
-
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="fullName"
-                placeholder="Full Name"
-                className="form-control mb-2"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="form-control mb-2"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-
-              <input
-                type="text"
-                name="contactNo"
-                placeholder="Contact No"
-                className="form-control mb-2"
-                value={formData.contactNo}
-                onChange={handleChange}
-                maxLength={10}
-                minLength={10}
-                required
-              />
-
-              <select
-                name="gender"
-                className="form-select mb-2"
-                value={formData.gender}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                className="form-control mb-3"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-
-              <button type="submit" className="btn btn-success w-100">
-                Sign Up
-              </button>
-            </form>
-
-            <p className="text-center mt-3" style={{ fontSize: "12px" }}>
-              Already registered?{" "}
-              <span
-                style={{ color: "#0d6efd", cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => navigate("/admin/login")}
-              >
-                Login now
-              </span>
-            </p>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="card p-4 shadow" style={{ width: "400px" }}>
+        <h3 className="card-title text-center mb-3">Store Signup</h3>
+        {message && <div className="alert alert-info">{message}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <input
+              type="text"
+              name="storeName"
+              placeholder="Store Name"
+              value={formData.storeName}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
           </div>
-        </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              name="contactNo"
+              placeholder="Contact No"
+              value={formData.contactNo}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              name="licenseNumber"
+              placeholder="License Number"
+              value={formData.licenseNumber}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <button className="btn btn-primary w-100" type="submit">
+            Sign Up
+          </button>
+        </form>
+        <p className="text-center mt-3">
+          Already have an account? <span className="text-primary" style={{cursor:"pointer"}} onClick={()=>navigate("/admin/login")}>Login</span>
+        </p>
       </div>
-
-      {/* Custom CSS */}
-      <style>{`
-        .signup-section {
-          background: #f8f9fa;
-        }
-          
-        .signup-card {
-          max-width: 350px;
-          width: 100%;
-          border-radius: 1rem;
-          padding: 15px;
-            font-size: 8px;
-        }
-
-.signup-card label,
-.signup-card input,
-.signup-card select,
-.signup-card button {
-  font-size: 8px; 
-}
-
-      `}</style>
-    </section>
+    </div>
   );
 }
+
+export default Signup;
 

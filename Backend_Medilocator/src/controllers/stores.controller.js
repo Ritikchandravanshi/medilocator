@@ -20,9 +20,9 @@ const generateAccessAndRefreshTokens = async(storeId) => {
 }
 
 const registerStore = asyncHandler(async(req, res) => {
-    const{ storeName,address, email, contactNo, password} = req.body
+    const{ storeName,address, email, contactNo, licenseNumber, password} = req.body
 
-    if(!storeName || !address || !email || !contactNo || !password){
+    if(!storeName || !address || !email || !contactNo || !licenseNumber || !password){
         throw new ApiError(400, "All fields are required")
     }
 
@@ -39,6 +39,7 @@ const registerStore = asyncHandler(async(req, res) => {
         address,
         email,
         contactNo,
+        licenseNumber,
         password
     })
 
