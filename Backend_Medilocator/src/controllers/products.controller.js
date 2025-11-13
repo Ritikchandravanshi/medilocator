@@ -37,4 +37,57 @@ const addMedicine = asyncHandler(async (req, res) => {
   )
 })
 
-export { addMedicine }
+
+// Get all products
+const getAllProducts = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 20, category, search } = req.query;
+
+  const query = {};
+  
+  if (category) {
+    query.category = category;
+  }
+
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { brand: { $regex: search, $options: 'i' } },
+      { genericName: { $regex: search, $options: 'i' } }
+    ];
+  }
+
+  const products = await ProductCatalog.find(query)
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .sort({ createdAt: -1 });
+
+  const total = await ProductCatalog.countDocuments(query);
+
+  return res.status(200).json(
+    new ApiResponse(200, {
+      products,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    }, "Products retrieved successfully")
+  );
+});
+
+// Get product by ID
+const getProductById = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+
+  const product = await ProductCatalog.findById(productId);
+
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, product, "Product retrieved successfully")
+  );
+});
+
+
+
+export { addMedicine,getAllProducts }

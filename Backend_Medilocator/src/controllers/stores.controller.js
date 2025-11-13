@@ -1,80 +1,80 @@
-import { asyncHandler } from "../utils/AsyncHandler.js";
-import { ApiError } from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
 import { Store } from "../models/store.models.js";
+import { asyncHandler } from "../utils/AsyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
-const generateAccessAndRefreshTokens = async(storeId) => {
-   try {
-      const store = await Store.findById(storeId)        //find the user in db
-      const accessToken = store.generateAccessToken()  //generate accessToken the method is written in models
-      const refreshToken = store.generateRefreshToken() //generate refreshToken used to get new access token after expired
-      
-      store.refreshToken = refreshToken
-      await store.save({ validateBeforeSave: false })     //stores refreshToken in db without validation
+const generateAccessAndRefreshTokens = async (storeId) => {
+  try {
+    const store = await Store.findById(storeId);
+    const accessToken = store.generateAccessToken();
+    const refreshToken = store.generateRefreshToken();
 
-      return {accessToken, refreshToken}      //return acccess and refreshTokens
+    store.refreshToken = refreshToken;
+    await store.save({ validateBeforeSave: false });
 
-   } catch (error) {
-      throw new ApiError(500, "Something went wrong while generating access and refresh token")
-   }
-}
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating tokens");
+  }
+};
 
-const registerStore = asyncHandler(async(req, res) => {
-    const{ storeName,address, email, contactNo, licenseNumber, password} = req.body
+const registerStore = asyncHandler(async (req, res) => {
+  const { storeName, address, email, contactNo, licenseNumber, password } = req.body;
 
-    if(!storeName || !address || !email || !contactNo || !licenseNumber || !password){
-        throw new ApiError(400, "All fields are required")
-    }
+  // Validation
+  if ([storeName, address, email, contactNo, licenseNumber, password].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
 
-    const existedStore = await Store.findOne({
-        $or: [{ email }, { contactNo }]
-    })
+  // Check if store already exists
+  const existedStore = await Store.findOne({
+    $or: [{ email }, { licenseNumber }]
+  });
 
-    if(existedStore){
-        throw new ApiError(400, "Store is already registered")
-    }
+  if (existedStore) {
+    throw new ApiError(409, "Store with email or license number already exists");
+  }
 
-    const store = await Store.create({
-        storeName,
-        address,
-        email,
-        contactNo,
-        licenseNumber,
-        password
-    })
+  // Create store
+  const store = await Store.create({
+    storeName,
+    address,
+    email,
+    contactNo,
+    licenseNumber,
+    password
+  });
 
-    const createdStore = await Store.findById(store._id).select(
-        "-password -refreshToken"
-    )
+  const createdStore = await Store.findById(store._id).select("-password -refreshToken");
 
-    if(!createdStore){
-        throw new ApiError(500, "Something went wrong while registering Store")
-    }
+  if (!createdStore) {
+    throw new ApiError(500, "Something went wrong while registering store");
+  }
 
-    return res.status(200).json(
-        new ApiResponse(200, createdStore, "Store registered successfully")
-    )
-})
+  return res.status(201).json(
+    new ApiResponse(201, createdStore, "Store registered successfully")
+  );
+});
 
 const loginStore = asyncHandler(async (req, res) => {
-  const { email, contactNo, password } = req.body;
+  const { email, licenseNumber, password } = req.body;
 
-  if (!(email || contactNo)) {
-    throw new ApiError(400, "Email or Contact No. is required field");
+  if (!email && !licenseNumber) {
+    throw new ApiError(400, "Email or license number is required");
   }
 
   const store = await Store.findOne({
-    $or: [{ email }, { contactNo }]
+    $or: [{ email }, { licenseNumber }]
   });
 
   if (!store) {
-    throw new ApiError(404, "Store doesn't exist");
+    throw new ApiError(404, "Store does not exist");
   }
 
   const isPasswordValid = await store.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid Store credentials");
+    throw new ApiError(401, "Invalid credentials");
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(store._id);
@@ -93,11 +93,97 @@ const loginStore = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { store: loggedInStore, accessToken, refreshToken },
+        {
+          store: loggedInStore,
+          accessToken,
+          refreshToken
+        },
         "Store logged in successfully"
       )
     );
 });
 
+const logoutStore = asyncHandler(async (req, res) => {
+  await Store.findByIdAndUpdate(
+    req.store._id,
+    {
+      $unset: {
+        refreshToken: 1
+      }
+    },
+    {
+      new: true
+    }
+  );
 
-export {registerStore ,loginStore}
+  const options = {
+    httpOnly: true,
+    secure: true
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "Store logged out successfully"));
+});
+
+const getCurrentStore = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.store, "Current store fetched successfully"));
+});
+
+const updateStoreDetails = asyncHandler(async (req, res) => {
+  const { storeName, address, contactNo } = req.body;
+
+  if (!storeName && !address && !contactNo) {
+    throw new ApiError(400, "At least one field is required to update");
+  }
+
+  const updateFields = {};
+  if (storeName) updateFields.storeName = storeName;
+  if (address) updateFields.address = address;
+  if (contactNo) updateFields.contactNo = contactNo;
+
+  const store = await Store.findByIdAndUpdate(
+    req.store._id,
+    { $set: updateFields },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, store, "Store details updated successfully"));
+});
+
+const changeStorePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "Old password and new password are required");
+  }
+
+  const store = await Store.findById(req.store._id);
+  const isPasswordCorrect = await store.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Invalid old password");
+  }
+
+  store.password = newPassword;
+  await store.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+export {
+  registerStore,
+  loginStore,
+  logoutStore,
+  getCurrentStore,
+  updateStoreDetails,
+  changeStorePassword
+};

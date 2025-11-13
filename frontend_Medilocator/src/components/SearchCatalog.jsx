@@ -1,77 +1,104 @@
-import React, { useState } from "react";
-import "./SearchCatalog.css";
+import React, { useState, useEffect } from "react";
+import AdminSidebar from "../components/AdminSidebar";
+import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
-const dummyMedicines = [
-  { id: 1, name: "Paracetamol", brand: "Cipla", price: 25, stock: 120 },
-  { id: 2, name: "Amoxicillin", brand: "Sun Pharma", price: 80, stock: 60 },
-  { id: 3, name: "Cetirizine", brand: "Zydus", price: 30, stock: 200 },
-  { id: 4, name: "Azithromycin", brand: "Alkem", price: 95, stock: 40 },
-  { id: 5, name: "Metformin", brand: "Torrent", price: 55, stock: 90 },
-  { id: 6, name: "Ibuprofen", brand: "Dr. Reddy", price: 50, stock: 150 },
-  { id: 7, name: "Vitamin C", brand: "Himalaya", price: 40, stock: 300 },
-  { id: 8, name: "Omeprazole", brand: "Cipla", price: 75, stock: 70 },
-  { id: 9, name: "Dolo 650", brand: "Micro Labs", price: 30, stock: 110 },
-  { id: 10, name: "Pantoprazole", brand: "Sun Pharma", price: 65, stock: 80 },
-];
-
-const SearchCatalog = () => {
+const ProductCatalogSearch = () => {
   const [search, setSearch] = useState("");
-  const [storeInventory, setStoreInventory] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const filteredMedicines = dummyMedicines.filter((med) =>
-    med.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleAddToInventory = (medicine) => {
-    if (storeInventory.find((item) => item.id === medicine.id)) {
-      alert("Medicine already in store inventory!");
+  useEffect(() => {
+    if (search.trim() === "") {
+      setProducts([]);
+      setLoading(false);
       return;
     }
-    setStoreInventory([...storeInventory, medicine]);
-    alert(`${medicine.name} added to store inventory!`);
+
+    setLoading(true);
+    setError(null);
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const res = await api.get("/catalog/search", {
+          params: { search: search },
+        });
+        setProducts(res.data.data.products);
+      } catch (err) {
+        setError("Failed to search products");
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 300); 
+
+    return () => clearTimeout(delayDebounce);
+  }, [search]); 
+
+  // --- THIS IS THE FIX ---
+  // The navigate call now includes the product._id to match your App.jsx route
+  const handleAddProduct = (product) => {
+    navigate(`/store/add-stock/${product._id}`, { state: { medicine: product } });
   };
+  // --- END OF FIX ---
 
-  const navigate = useNavigate();
   return (
-    <div className="search-catalog">
-      <div className="search-header">
-        <h2>🔍 Search from Product Catalog</h2>
-        <input
-          type="text"
-          placeholder="Search medicine by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+    <div className="d-flex vh-100">
+      <AdminSidebar />
+      <div className="flex-grow-1 p-4 vh-100" style={{ overflow: 'auto', backgroundColor: '#f8f9fa' }}>
+        <h1 className="display-5">Search Master Catalog</h1>
+        <p className="lead">Find a product to add to your store's inventory.</p>
+        
+        <form onSubmit={(e) => e.preventDefault()} className="d-flex gap-2 my-4">
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            placeholder="Start typing to search medicines..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {loading && (
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )}
+        </form>
 
-      <div className="medicine-list">
-        {filteredMedicines.length > 0 ? (
-          filteredMedicines.map((med) => (
-            <div key={med.id} className="medicine-card">
-              <div>
-                <h3>{med.name}</h3>
-                <p><b>Brand:</b> {med.brand}</p>
-                <p><b>Price:</b> ₹{med.price}</p>
-                <p><b>Stock:</b> {med.stock} units</p>
-              </div>
+        {error && <p className="alert alert-danger">{error}</p>}
+
+        <div className="list-group">
+          {!loading && products.length === 0 && search.trim() !== "" && (
+            <div className="list-group-item text-center p-4">
+              <h4 className="mb-3">No products found for "{search}".</h4>
               <button
-                className="add-btn"
-                onClick={() => handleAddToInventory(med)}
+                className="btn btn-success"
+                onClick={() => navigate("/store/request-product")} // This path must be in your App.jsx
               >
-                Add to Inventory
+                Request This Product to be Added
               </button>
             </div>
-          ))
-        ) : (
-          <div className="no-medicine"> 
-            <h1>No Medicine found </h1>
-             <button className="add-new" onClick={()=>navigate("/search/add")}>➕ Add New Medicine</button></div>
-       
-        ) }
+          )}
+          
+          {products.map((product) => (
+            <div className="list-group-item list-group-item-action d-flex justify-content-between align-items-center" key={product._id}>
+              <div>
+                <h5 className="mb-1">{product.name}</h5>
+                <p className="mb-1"><strong>Brand:</strong> {product.brand} | <strong>Generic:</strong> {product.genericName || "N/A"}</p>
+                <small>Pack Size: {product.packSize}</small>
+              </div>
+              <button
+                className="btn btn-success"
+                onClick={() => handleAddProduct(product)} // This will now work
+              >
+                + Add to My Inventory
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default SearchCatalog;
+export default ProductCatalogSearch;

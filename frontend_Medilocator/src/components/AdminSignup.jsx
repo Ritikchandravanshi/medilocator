@@ -22,7 +22,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/stores/add", formData);
+      const res = await axios.post("/api/v1/stores/register", formData);
       setMessage(res.data.message || "Store registered successfully!");
       setTimeout(() => navigate("/admin/login"), 2000);
     } catch (err) {
@@ -31,10 +31,30 @@ function Signup() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card p-4 shadow" style={{ width: "400px" }}>
-        <h3 className="card-title text-center mb-3">Store Signup</h3>
-        {message && <div className="alert alert-info">{message}</div>}
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{ backgroundColor: "#f8f9fa" }}
+    >
+      <div
+        className="card shadow-lg p-4"
+        style={{ width: "400px", borderRadius: "15px" }}
+      >
+        <h3 className="text-center mb-4" style={{ fontWeight: "600" }}>
+          Store Signup
+        </h3>
+
+        {message && (
+          <div
+            className={`alert ${
+              message.includes("successfully")
+                ? "alert-success"
+                : "alert-danger"
+            } py-2`}
+          >
+            {message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
@@ -45,8 +65,14 @@ function Signup() {
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -56,8 +82,14 @@ function Signup() {
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
+
           <div className="mb-3">
             <input
               type="email"
@@ -67,19 +99,31 @@ function Signup() {
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
+
           <div className="mb-3">
             <input
               type="text"
               name="contactNo"
-              placeholder="Contact No"
+              placeholder="Contact Number"
               value={formData.contactNo}
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -89,8 +133,14 @@ function Signup() {
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
+
           <div className="mb-3">
             <input
               type="password"
@@ -100,14 +150,40 @@ function Signup() {
               onChange={handleChange}
               className="form-control"
               required
+              style={{
+                fontSize: "15px",
+                padding: "10px",
+                borderRadius: "8px",
+              }}
             />
           </div>
-          <button className="btn btn-primary w-100" type="submit">
+
+          <button
+            className="btn btn-primary w-100 mt-2"
+            type="submit"
+            style={{
+              fontSize: "16px",
+              fontWeight: "600",
+              padding: "10px 0",
+              borderRadius: "8px",
+            }}
+          >
             Sign Up
           </button>
         </form>
-        <p className="text-center mt-3">
-          Already have an account? <span className="text-primary" style={{cursor:"pointer"}} onClick={()=>navigate("/admin/login")}>Login</span>
+
+        <p
+          className="text-center mt-3"
+          style={{ fontSize: "13px", color: "#555" }}
+        >
+          Already have an account?{" "}
+          <span
+            className="text-primary"
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => navigate("/admin/login")}
+          >
+            Login
+          </span>
         </p>
       </div>
     </div>
@@ -115,4 +191,3 @@ function Signup() {
 }
 
 export default Signup;
-

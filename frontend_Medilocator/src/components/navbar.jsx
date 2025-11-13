@@ -69,7 +69,7 @@ function Navbar() {
               <button style={{marginLeft : "8px"}}
               type="button"
               className="btn btn-teal btn-sm"
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/admin/register")}
             >
               Admin
             </button>

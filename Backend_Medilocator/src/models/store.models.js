@@ -7,6 +7,7 @@ const storeSchema = new Schema(
         storeName:{
             type: String,
             required: true,
+            index: true
         },
         address: {
             type: String,

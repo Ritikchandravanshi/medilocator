@@ -24,4 +24,6 @@ const productCatalogSchema = new Schema(
 
 productCatalogSchema.index({ name: "text", genericName: "text", brand: "text" });
 
+
+
 export const ProductCatalog = mongoose.model("ProductCatalog", productCatalogSchema);
